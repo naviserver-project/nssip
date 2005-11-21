@@ -1,0 +1,71 @@
+SIP Proxy Module for NaviServer 4.x                                                                     
+Release 0.1                                                                                       
+vlad@crystalballinc.com                                                                            
+                                                                                                   
+This is NaviServer module that implements SIP proxy.                              
+It is based on GNU oSIP stack from http://www.gnu.org/software/osip/osip.html.
+It allows to use NaviServer as SIP proxy with dynamic rules and routing,
+all routes can be refreshed/updates at any time without server restart.
+
+For each client which is remote peer/gateway, number of SIP routes are defined
+and the best route is returned and SIP request is proxied to that destination.
+
+/*--------------------------------------------------------------------*/
+
+Compiling and Installing
+
+To compile this driver, you'll need to have oSIP library compiled
+and installed.
+
+Configuring
+
+ns_section      "ns/server/${server}/module/nssip"
+ns_param        rcvbuf                  260000
+ns_param        threads                 8
+ns_param        debug                   0
+ns_param	address			0.0.0.0
+ns_param	port			5060
+ns_param	proxy_address		192.168.1.1
+
+ where
+
+ rcvbuf        - size of the socket receive buffer
+ threads       - how many worker threads to pre-spawn
+ debug         - if greater than zero, log debugging info
+ address       - listen address for UDP SIP requests
+ port          - port to listen UDSP SIP requests
+ proxy_address - address of default SIP proxy, not found requests
+                 will be proxied to that address
+
+Usage                                                                                              
+                                                                                                   
+There is ns_sip command available to create manipulate SIP routes.
+  
+  ns_sip usage:
+
+     ns_sip clientlink clientip1 clientip2
+       Links one client to anopther so their share their routes
+
+     ns_sip clientclear clientip ...
+       Clears all routes for this client from the memory
+
+     ns_sip clientlist
+      Returns a list of all clients
+ 
+     ns_sip routeadd clientip phone proxy[:port][#prefix][?t] phone proxy ...
+      Adds new route to the client
+
+     Example:
+       ns_sip routeadd 0.0.0.0 1703 "206.132.240.231:5060#2595268109?t"
+       ns_sip routeadd 127.0.0.1 1703 "206.132.240.231:5060#2595268109?t"
+       ns_sip routeadd 192.168.1.1 1703 "206.132.240.231:5060#2595268109?t"
+
+     ns_sip routedel clientip phone
+       Deletes route from the client
+
+     ns_sip routefind clientip phone
+       Returns proxy for the given client and phone number
+
+Authors
+
+     Vlad Seryakov vlad@crystalballinc.com
