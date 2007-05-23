@@ -1,4 +1,6 @@
-NAVISERVER=/usr/local/ns
+ifndef NAVISERVER
+    NAVISERVER  = /usr/local/ns
+endif
 
 #
 # Module name
