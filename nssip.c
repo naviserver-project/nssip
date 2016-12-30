@@ -209,7 +209,7 @@ static void Segv(int sig)
         sleep(1);
 }
 
-NS_EXPORT int Ns_ModuleInit(char *server, char *module)
+NS_EXPORT int Ns_ModuleInit(const char *server, const char *module)
 {
     int i, n;
     sip_proxy_t *proxy;
@@ -247,7 +247,7 @@ NS_EXPORT int Ns_ModuleInit(char *server, char *module)
     // Create listen socket and register callback
     if (!(address = Ns_ConfigGetValue(path, "address")))
         address = "0.0.0.0";
-    if ((proxy->sock = Ns_SockListenUdp(address, proxy->port)) == -1) {
+    if ((proxy->sock = Ns_SockListenUdp(address, proxy->port, NS_FALSE)) == -1) {
         Ns_Log(Error, "nssip: %s:%d: couldn't create socket: %s", address, proxy->port, strerror(errno));
         return NS_ERROR;
     }

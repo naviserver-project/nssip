@@ -10,7 +10,7 @@ MOD      =  nssip.so
 #
 # Objects to build.
 #
-OBJS     = nssip.o
+MODOBJS     = nssip.o
 
 CFLAGS = -I. -g -O2 -pthread
 
